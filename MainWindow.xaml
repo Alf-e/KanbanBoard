@@ -1,0 +1,85 @@
+﻿<Window x:Class="Kanban.MainWindow"
+        
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Kanban"
+        mc:Ignorable="d"
+        Title="Kanban" Height="800" Width="1200"
+        MouseMove="Window_MouseMove">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Style="{StaticResource TitleLabel}" />
+        <Grid Style="{StaticResource GridStyle1}" Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Style="{StaticResource ColumnBorder}" Grid.Column="0">
+                <Grid Style="{StaticResource GridStyle2}" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Label Style="{StaticResource ColumnLabel}" Content="Ready"/>
+               
+                    <local:KanbanBox x:Name="readyColumn" Grid.Row="1"/>
+                    
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource ColumnBorder}" Grid.Column="1">
+                <Grid Style="{StaticResource GridStyle2}" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Label Style="{StaticResource ColumnLabel}" Content="Doing"/>
+           
+                    <local:KanbanBox x:Name="doingColumn" Grid.Row="1"/>
+                    
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource ColumnBorder}" Grid.Column="2">
+                <Grid Style="{StaticResource GridStyle2}" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Label Style="{StaticResource ColumnLabel}" Content="Done"/>
+                
+                    <local:KanbanBox x:Name="doneColumn" Grid.Row="1"/>
+                </Grid>
+            </Border>
+
+        </Grid>
+    </Grid>
+</Window>
