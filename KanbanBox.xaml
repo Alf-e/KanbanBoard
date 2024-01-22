@@ -16,7 +16,7 @@
                 <DataTemplate>
 
 
-                    <Border BorderBrush="Black" BorderThickness="1" Margin="5"  Height="auto" Background="{Binding Color}" MouseDown="KanbanItem_MouseDown">
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="5"  Height="auto" Background="{Binding Colour}" MouseDown="KanbanItem_MouseDown" >
                         <Grid Margin="5" >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>

@@ -1,8 +1,10 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -23,6 +25,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Timer = System.Timers.Timer;
+using System.Data.SQLite;
+using Microsoft.EntityFrameworkCore.Sqlite;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Kanban
 {
@@ -35,13 +41,14 @@ namespace Kanban
         public ObservableCollection<KanbanItem> doingItems;
         public ObservableCollection<KanbanItem> doneItems;
         public ObservableCollection<KanbanItem> sourceCollection;
-
-
+        
+        
         public MainWindow()
         {
+            
             InitializeComponent();
 
-            PopulateLists();
+            
             readyColumn.InternalItemsControl.ItemsSource = readyItems;
             readyColumn.KanbanListDrop += KanbanList_Drop;
             readyColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
@@ -54,12 +61,13 @@ namespace Kanban
             doneColumn.KanbanListDrop += KanbanList_Drop;
             doneColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
 
-           
-            
-
+            //SQLiteHelper.InitializeDatabase();
+            PopulateLists();
         }
+        
         private void PopulateLists()
         {
+            //readyItems = SQLiteHelper.GetAllKanbanItems();
             readyItems = FillListFromFile("Ready");
             doingItems = FillListFromFile("Doing");
             doneItems = FillListFromFile("Done");
@@ -73,34 +81,38 @@ namespace Kanban
             {
                 localList.Add(new KanbanItem());
             }
-            localList.Add(new KanbanItem("draggy","Blue", "hello all"));
+            
 
             return localList;
         }
 
         private void KanbanItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            
             var border = sender as Border;
-            var data = border.DataContext as KanbanItem; // Replace YourDataType with the actual type of your data
+            var data = border.DataContext as KanbanItem;
             var selectedHostControl = FindVisualParent<ItemsControl>(border);
 
             if (data != null)
             {
+                
+          
                 border.Opacity = 0.5;
                 this.sourceCollection = selectedHostControl.ItemsSource as ObservableCollection<KanbanItem>;
                 DragDrop.DoDragDrop(border, data, DragDropEffects.Move);
+                
                 
             }
         }
 
         private void KanbanList_Drop(object sender, DragEventArgs e)
         {
-
+            
             if (e.Data.GetDataPresent(typeof(KanbanItem)))
             {
                 var droppedData = e.Data.GetData(typeof(KanbanItem)) as KanbanItem;
-
-                
+               
+               
                 sourceCollection.Remove(droppedData);
 
                 var targetControl = sender as ItemsControl;
@@ -109,6 +121,7 @@ namespace Kanban
 
                 
             }
+            
         }
 
         private T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
@@ -123,14 +136,13 @@ namespace Kanban
             else
                 return FindVisualParent<T>(parentObject);
         }
-        private void Window_MouseMove(object sender, MouseEventArgs e)
-        {
 
-        }
+       
+
         public class KanbanItem : INotifyPropertyChanged
         {
             public string Title { get; set; }
-            public string Color { get; set; }
+            public string Colour { get; set; }
             public string Tag { get; set; }
             public List<SubTask> SubTasks { get; set; }
 
@@ -167,7 +179,7 @@ namespace Kanban
             public KanbanItem(string title, string color, string tag)
             {
                 this.Title = title;
-                this.Color = color;
+                this.Colour = color;
                 this.Tag = tag;
                 this.SubTasks = new();
 
@@ -217,8 +229,11 @@ namespace Kanban
                     }
                 }
 
+                public SubTask()
+                {
+                }
 
-                public SubTask(KanbanItem host) : this("Test SusdhshSubtask gsfggggg", false, host)
+                public SubTask(KanbanItem host) : this("Test Subtask", false, host)
                 {
 
                 }
@@ -233,6 +248,73 @@ namespace Kanban
             }
         }
 
-       
+        public static class SQLiteHelper
+        {
+            private const string ConnectionString = "Data Source=MyDatabase.db;Version=3;";
+
+            public static void InitializeDatabase()
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                {
+                    connection.Open();
+
+                   
+                    using (SQLiteCommand command = new SQLiteCommand(
+                        "CREATE TABLE IF NOT EXISTS KItems (Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT, Colour TEXT, Tag TEXT)",
+                        connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            public static void InsertKanbanItem(KanbanItem item)
+            {
+                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                {
+                    connection.Open();
+
+                    using (SQLiteCommand command = new SQLiteCommand(
+                        "INSERT INTO KItems (Title, Colour, Tag) VALUES (@Title, @Colour, @Tag)",
+                        connection))
+                    {
+                        command.Parameters.AddWithValue("@Title", item.Title);
+                        command.Parameters.AddWithValue("@Colour", item.Colour);
+                        command.Parameters.AddWithValue("@Tag", item.Tag);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            public static ObservableCollection<KanbanItem> GetAllKanbanItems()
+            {
+                ObservableCollection<KanbanItem> Kitems = new();
+
+                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                {
+                    connection.Open();
+
+                    using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM KItems", connection))
+                    {
+                        using (SQLiteDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                KanbanItem item = new KanbanItem
+                                {
+                                    Title = Convert.ToString(reader["Title"]),
+                                    Colour = Convert.ToString(reader["Colour"]),
+                                    Tag = Convert.ToString(reader["Tag"])
+                                };
+
+                                Kitems.Add(item);
+                            }
+                        }
+                    }
+                }
+
+                return Kitems;
+            }
+        }
     }
 }
