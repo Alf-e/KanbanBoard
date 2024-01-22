@@ -47,8 +47,10 @@ namespace Kanban
         {
             
             InitializeComponent();
+                    
+            //SQLiteHelper.InitializeDatabase();
+            PopulateLists();
 
-            
             readyColumn.InternalItemsControl.ItemsSource = readyItems;
             readyColumn.KanbanListDrop += KanbanList_Drop;
             readyColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
@@ -61,8 +63,8 @@ namespace Kanban
             doneColumn.KanbanListDrop += KanbanList_Drop;
             doneColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
 
-            //SQLiteHelper.InitializeDatabase();
-            PopulateLists();
+            
+            
         }
         
         private void PopulateLists()
