@@ -25,9 +25,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Timer = System.Timers.Timer;
-using System.Data.SQLite;
-using Microsoft.EntityFrameworkCore.Sqlite;
-using Microsoft.EntityFrameworkCore;
+using SQLitePCL;
+using Microsoft.Data.Sqlite;
 
 
 namespace Kanban
@@ -47,8 +46,8 @@ namespace Kanban
         {
             
             InitializeComponent();
-                    
-            //SQLiteHelper.InitializeDatabase();
+            SQLiteHelper.InitializeDatabase();
+
             PopulateLists();
 
             readyColumn.InternalItemsControl.ItemsSource = readyItems;
@@ -252,68 +251,79 @@ namespace Kanban
 
         public static class SQLiteHelper
         {
-            private const string ConnectionString = "Data Source=MyDatabase.db;Version=3;";
+            private const string connectionString = "Data Source=my_database.db";
 
             public static void InitializeDatabase()
             {
-                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                SQLitePCL.Batteries_V2.Init();
+                using (var connection = new SqliteConnection(connectionString))
                 {
                     connection.Open();
 
-                   
-                    using (SQLiteCommand command = new SQLiteCommand(
-                        "CREATE TABLE IF NOT EXISTS KItems (Id INTEGER PRIMARY KEY AUTOINCREMENT, Title TEXT, Colour TEXT, Tag TEXT)",
-                        connection))
+                    string createTableQuery = @"
+    CREATE TABLE IF NOT EXISTS Kitems (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        Title TEXT NOT NULL,
+        Colour TEXT NOT NULL,
+        Tag TEXT NOT NULL
+    )";
+
+                    using (var command = new SqliteCommand(createTableQuery, connection))
                     {
                         command.ExecuteNonQuery();
                     }
+
+
+
+                    connection.Close();
                 }
-            }
+                   // creates database if doesnt exist
+                }
 
             public static void InsertKanbanItem(KanbanItem item)
             {
-                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
-                {
-                    connection.Open();
+                //using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                //{
+                //    connection.Open();
 
-                    using (SQLiteCommand command = new SQLiteCommand(
-                        "INSERT INTO KItems (Title, Colour, Tag) VALUES (@Title, @Colour, @Tag)",
-                        connection))
-                    {
-                        command.Parameters.AddWithValue("@Title", item.Title);
-                        command.Parameters.AddWithValue("@Colour", item.Colour);
-                        command.Parameters.AddWithValue("@Tag", item.Tag);
-                        command.ExecuteNonQuery();
-                    }
-                }
+                //    using (SQLiteCommand command = new SQLiteCommand(
+                //        "INSERT INTO KItems (Title, Colour, Tag) VALUES (@Title, @Colour, @Tag)",
+                //        connection))
+                //    {
+                //        command.Parameters.AddWithValue("@Title", item.Title);
+                //        command.Parameters.AddWithValue("@Colour", item.Colour);
+                //        command.Parameters.AddWithValue("@Tag", item.Tag);
+                //        command.ExecuteNonQuery();
+                //    }
+                //}
             }
 
             public static ObservableCollection<KanbanItem> GetAllKanbanItems()
             {
                 ObservableCollection<KanbanItem> Kitems = new();
 
-                using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
-                {
-                    connection.Open();
+                //using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
+                //{
+                //    connection.Open();
 
-                    using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM KItems", connection))
-                    {
-                        using (SQLiteDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                KanbanItem item = new KanbanItem
-                                {
-                                    Title = Convert.ToString(reader["Title"]),
-                                    Colour = Convert.ToString(reader["Colour"]),
-                                    Tag = Convert.ToString(reader["Tag"])
-                                };
+                //    using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM KItems", connection))
+                //    {
+                //        using (SQLiteDataReader reader = command.ExecuteReader())
+                //        {
+                //            while (reader.Read())
+                //            {
+                //                KanbanItem item = new KanbanItem
+                //                {
+                //                    Title = Convert.ToString(reader["Title"]),
+                //                    Colour = Convert.ToString(reader["Colour"]),
+                //                    Tag = Convert.ToString(reader["Tag"])
+                //                };
 
-                                Kitems.Add(item);
-                            }
-                        }
-                    }
-                }
+                //                Kitems.Add(item);
+                //            }
+                //        }
+                //    }
+                //}
 
                 return Kitems;
             }
