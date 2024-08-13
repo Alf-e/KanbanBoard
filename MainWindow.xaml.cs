@@ -142,6 +142,7 @@ namespace Kanban
 
         public class KanbanItem : INotifyPropertyChanged
         {
+            public int Id { get; set; }
             public string Title { get; set; }
             public string Colour { get; set; }
             public string Tag { get; set; }
@@ -165,7 +166,7 @@ namespace Kanban
 
 
 
-            public KanbanItem() : this("Test Item", "LightGray", "TestTag")
+            public KanbanItem() : this(1,"Test Item", "LightGray", "TestTag")
             {
 
 
@@ -177,8 +178,9 @@ namespace Kanban
                 AddSubTask();
                 AddSubTask();
             }
-            public KanbanItem(string title, string color, string tag)
+            public KanbanItem(int id, string title, string color, string tag)
             {
+                this.Id = id;
                 this.Title = title;
                 this.Colour = color;
                 this.Tag = tag;
@@ -268,8 +270,51 @@ namespace Kanban
         Tag TEXT NOT NULL
     )";
 
+                    string createSubTableQuery = @"
+    CREATE TABLE IF NOT EXISTS Ksubitems (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+        HostId TEXT NOT NULL,
+        FlagState TEXT NOT NULL,
+        Title TEXT NOT NULL
+    )";
+
                     using (var command = new SqliteCommand(createTableQuery, connection))
                     {
+                        command.ExecuteNonQuery();
+                    }
+
+                    using (var command = new SqliteCommand(createSubTableQuery, connection))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+
+                    connection.Close();
+                }
+                   // creates database tables if doesnt exist
+            }
+
+            public static void InsertKanbanItem(KanbanItem item)
+            {
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    string addItemQuery = @"
+    INSERT INTO Kitems (
+        Title,
+        Colour,
+        Tag
+    ) VALUES (
+        @title,
+        @colour,
+        @tag
+)";
+
+
+                    using (var command = new SqliteCommand(addItemQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@title", item.Title);
+                        command.Parameters.AddWithValue("@colour", item.Colour);
+                        command.Parameters.AddWithValue("@tag", item.Tag);
                         command.ExecuteNonQuery();
                     }
 
@@ -277,55 +322,63 @@ namespace Kanban
 
                     connection.Close();
                 }
-                   // creates database if doesnt exist
-                }
+                // inserts item parameters data into database
 
-            public static void InsertKanbanItem(KanbanItem item)
-            {
-                //using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
-                //{
-                //    connection.Open();
-
-                //    using (SQLiteCommand command = new SQLiteCommand(
-                //        "INSERT INTO KItems (Title, Colour, Tag) VALUES (@Title, @Colour, @Tag)",
-                //        connection))
-                //    {
-                //        command.Parameters.AddWithValue("@Title", item.Title);
-                //        command.Parameters.AddWithValue("@Colour", item.Colour);
-                //        command.Parameters.AddWithValue("@Tag", item.Tag);
-                //        command.ExecuteNonQuery();
-                //    }
-                //}
+                  
             }
 
             public static ObservableCollection<KanbanItem> GetAllKanbanItems()
             {
                 ObservableCollection<KanbanItem> Kitems = new();
 
-                //using (SQLiteConnection connection = new SQLiteConnection(ConnectionString))
-                //{
-                //    connection.Open();
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    string selectQuery = "SELECT Id, Title, Colour, Tag FROM Kitems";
 
-                //    using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM KItems", connection))
-                //    {
-                //        using (SQLiteDataReader reader = command.ExecuteReader())
-                //        {
-                //            while (reader.Read())
-                //            {
-                //                KanbanItem item = new KanbanItem
-                //                {
-                //                    Title = Convert.ToString(reader["Title"]),
-                //                    Colour = Convert.ToString(reader["Colour"]),
-                //                    Tag = Convert.ToString(reader["Tag"])
-                //                };
+                    using (var command = new SqliteCommand(selectQuery, connection))
+                    {
+                        // Execute the query and obtain a reader to access the data
+                        using (var reader = command.ExecuteReader())
+                        {
+                            // Read and display the data
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0); // Get the value of the first column 
+                                string title = reader.GetString(1); // Get the value of the second column 
+                                string colour = reader.GetString(2); // Get the value of the third column
+                                string tag = reader.GetString(2); // Get the value of the fourth column
 
-                //                Kitems.Add(item);
-                //            }
-                //        }
-                //    }
-                //}
+                                Kitems.Add(new KanbanItem(id,title,colour,tag));
+                            }
+                        }
+                    }
 
-                return Kitems;
+
+
+                    connection.Close();
+                }
+
+                    //    using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM KItems", connection))
+                    //    {
+                    //        using (SQLiteDataReader reader = command.ExecuteReader())
+                    //        {
+                    //            while (reader.Read())
+                    //            {
+                    //                KanbanItem item = new KanbanItem
+                    //                {
+                    //                    Title = Convert.ToString(reader["Title"]),
+                    //                    Colour = Convert.ToString(reader["Colour"]),
+                    //                    Tag = Convert.ToString(reader["Tag"])
+                    //                };
+
+                    //                Kitems.Add(item);
+                    //            }
+                    //        }
+                    //    }
+
+
+                    return Kitems;
             }
         }
     }
