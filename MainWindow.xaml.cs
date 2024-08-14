@@ -347,7 +347,7 @@ namespace Kanban
                                 int id = reader.GetInt32(0); // Get the value of the first column 
                                 string title = reader.GetString(1); // Get the value of the second column 
                                 string colour = reader.GetString(2); // Get the value of the third column
-                                string tag = reader.GetString(2); // Get the value of the fourth column
+                                string tag = reader.GetString(3); // Get the value of the fourth column
 
                                 Kitems.Add(new KanbanItem(id,title,colour,tag));
                             }
@@ -358,25 +358,6 @@ namespace Kanban
 
                     connection.Close();
                 }
-
-                    //    using (SQLiteCommand command = new SQLiteCommand("SELECT * FROM KItems", connection))
-                    //    {
-                    //        using (SQLiteDataReader reader = command.ExecuteReader())
-                    //        {
-                    //            while (reader.Read())
-                    //            {
-                    //                KanbanItem item = new KanbanItem
-                    //                {
-                    //                    Title = Convert.ToString(reader["Title"]),
-                    //                    Colour = Convert.ToString(reader["Colour"]),
-                    //                    Tag = Convert.ToString(reader["Tag"])
-                    //                };
-
-                    //                Kitems.Add(item);
-                    //            }
-                    //        }
-                    //    }
-
 
                     return Kitems;
             }
