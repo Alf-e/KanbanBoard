@@ -39,7 +39,9 @@ namespace Kanban
         public ObservableCollection<KanbanItem> readyItems;
         public ObservableCollection<KanbanItem> doingItems;
         public ObservableCollection<KanbanItem> doneItems;
+
         public ObservableCollection<KanbanItem> sourceCollection;
+        //Used to track the original collection of a dragdrop operation for removal
         
         
         public MainWindow()
