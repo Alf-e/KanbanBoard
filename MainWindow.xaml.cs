@@ -70,7 +70,9 @@ namespace Kanban
         
         private void PopulateLists()
         {
-            //readyItems = SQLiteHelper.GetAllKanbanItems();
+            //readyItems = SQLiteHelper.GetAllReadyKanbanItems();
+            //doingItems = SQLiteHelper.GetAllDoingKanbanItems();
+            //doneItems = SQLiteHelper.GetAllDoneKanbanItems();
             readyItems = FillListFromFile("Ready");
             doingItems = FillListFromFile("Doing");
             doneItems = FillListFromFile("Done");
@@ -269,7 +271,8 @@ namespace Kanban
         Id INTEGER PRIMARY KEY AUTOINCREMENT,
         Title TEXT NOT NULL,
         Colour TEXT NOT NULL,
-        Tag TEXT NOT NULL
+        Tag TEXT NOT NULL,
+        Column TEXT NOT NULL
     )";
 
                     string createSubTableQuery = @"
