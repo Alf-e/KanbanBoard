@@ -123,6 +123,14 @@ namespace Kanban
                 var targetControlList = targetControl.ItemsSource as ObservableCollection<KanbanItem>;
                 targetControlList.Add(droppedData);
 
+                string colname = "ready";
+                if (targetControlList.Equals(doingItems))
+                {
+                    colname = "doing";
+                } 
+                else if (targetControlList.Equals(doneItems)){
+                    colname = "done";
+                }
                 
             }
             
