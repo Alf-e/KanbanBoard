@@ -131,7 +131,11 @@ namespace Kanban
                 else if (targetControlList.Equals(doneItems)){
                     colname = "done";
                 }
-                
+              
+                SQLiteHelper.UpdateKanbanItemColumn(droppedData.Id, colname);
+
+
+               
             }
             
         }
@@ -345,8 +349,6 @@ namespace Kanban
             public static void UpdateKanbanItemColumn(int itemid, string newcolumn)
             {
 
-              
-
                 using (var connection = new SqliteConnection(connectionString))
                 {
                     connection.Open();
@@ -367,8 +369,6 @@ namespace Kanban
 
                     connection.Close();
                 }
-
-
                 // updates column of specified kanbanitem 
             }
 
