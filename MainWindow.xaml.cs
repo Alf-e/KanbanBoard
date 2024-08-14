@@ -48,9 +48,10 @@ namespace Kanban
         {
             
             InitializeComponent();
-            SQLiteHelper.InitializeDatabase();
 
+            SQLiteHelper.InitializeDatabase();
             PopulateLists();
+
 
             readyColumn.InternalItemsControl.ItemsSource = readyItems;
             readyColumn.KanbanListDrop += KanbanList_Drop;
@@ -332,6 +333,37 @@ namespace Kanban
 
                   
             }
+
+            public static void UpdateKanbanItemColumn(int itemid, string newcolumn)
+            {
+
+              
+
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    string updateColumnQuery = @"
+    UPDATE Kitems
+    SET Column = @column
+    WHERE Id = @id";
+
+
+                    using (var command = new SqliteCommand(updateColumnQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", itemid);
+                        command.Parameters.AddWithValue("@column", newcolumn);
+                        command.ExecuteNonQuery();
+                    }
+
+
+
+                    connection.Close();
+                }
+
+
+                // updates column of specified kanbanitem 
+            }
+
 
             public static ObservableCollection<KanbanItem> GetAllKanbanItems()
             {
