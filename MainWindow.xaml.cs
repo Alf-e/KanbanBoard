@@ -70,12 +70,10 @@ namespace Kanban
         
         private void PopulateLists()
         {
-            //readyItems = SQLiteHelper.GetAllReadyKanbanItems();
-            //doingItems = SQLiteHelper.GetAllDoingKanbanItems();
-            //doneItems = SQLiteHelper.GetAllDoneKanbanItems();
-            readyItems = FillListFromFile("Ready");
-            doingItems = FillListFromFile("Doing");
-            doneItems = FillListFromFile("Done");
+            readyItems = SQLiteHelper.GetAllColumnKanbanItems("ready");
+            doingItems = SQLiteHelper.GetAllColumnKanbanItems("doing");
+            doneItems = SQLiteHelper.GetAllColumnKanbanItems("done");
+
         }
 
         private ObservableCollection<KanbanItem> FillListFromFile(string type)
@@ -307,11 +305,13 @@ namespace Kanban
     INSERT INTO Kitems (
         Title,
         Colour,
-        Tag
+        Tag,
+        Column
     ) VALUES (
         @title,
         @colour,
-        @tag
+        @tag,
+        @column
 )";
 
 
@@ -320,6 +320,7 @@ namespace Kanban
                         command.Parameters.AddWithValue("@title", item.Title);
                         command.Parameters.AddWithValue("@colour", item.Colour);
                         command.Parameters.AddWithValue("@tag", item.Tag);
+                        command.Parameters.AddWithValue("@column", "ready");
                         command.ExecuteNonQuery();
                     }
 
@@ -353,7 +354,7 @@ namespace Kanban
                                 string title = reader.GetString(1); // Get the value of the second column 
                                 string colour = reader.GetString(2); // Get the value of the third column
                                 string tag = reader.GetString(3); // Get the value of the fourth column
-
+                                
                                 Kitems.Add(new KanbanItem(id,title,colour,tag));
                             }
                         }
@@ -367,6 +368,44 @@ namespace Kanban
                 //Populates Kitems with every kanban item in table
                 return Kitems;
             }
+
+            public static ObservableCollection<KanbanItem> GetAllColumnKanbanItems(string parcolumn)
+            {
+                ObservableCollection<KanbanItem> Kitems = new();
+
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+
+                    string selectQuery = $"SELECT Id, Title, Colour, Tag FROM Kitems WHERE Column = '{parcolumn}'";
+
+                    using (var command = new SqliteCommand(selectQuery, connection))
+                    {
+                        // Execute the query and obtain a reader to access the data
+                        using (var reader = command.ExecuteReader())
+                        {
+                            // Read and display the data
+                            while (reader.Read())
+                            {
+                                int id = reader.GetInt32(0); // Get the value of the first column 
+                                string title = reader.GetString(1); // Get the value of the second column 
+                                string colour = reader.GetString(2); // Get the value of the third column
+                                string tag = reader.GetString(3); // Get the value of the fourth column
+
+                                Kitems.Add(new KanbanItem(id, title, colour, tag));
+                            }
+                        }
+                    }
+
+
+
+                    connection.Close();
+                }
+
+                //Populates Kitems with every kanban item that is in the parameter column
+                return Kitems;
+            }
+
         }
     }
 }
