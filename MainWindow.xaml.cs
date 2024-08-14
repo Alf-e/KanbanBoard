@@ -359,7 +359,8 @@ namespace Kanban
                     connection.Close();
                 }
 
-                    return Kitems;
+                //Populates Kitems with every kanban item in table
+                return Kitems;
             }
         }
     }
