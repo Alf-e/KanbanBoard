@@ -297,7 +297,6 @@ namespace Kanban
                 }
                    // creates database tables if doesnt exist
             }
-
             public static void InsertKanbanItem(KanbanItem item)
             {
                 using (var connection = new SqliteConnection(connectionString))
@@ -334,7 +333,39 @@ namespace Kanban
 
                   
             }
+            public static void InsertSubtaskItem(string hostid, string flagstate, string title)
+            {
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    string addItemQuery = @"
+    INSERT INTO Ksubitems (
+        HostId,
+        FlagState,
+        Title
+    ) VALUES (
+        @hostid,
+        @flagstate,
+        @title
+)";
 
+
+                    using (var command = new SqliteCommand(addItemQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@hostid", hostid);
+                        command.Parameters.AddWithValue("@flagstate", flagstate);
+                        command.Parameters.AddWithValue("@title", title);
+                        command.ExecuteNonQuery();
+                    }
+
+
+
+                    connection.Close();
+                }
+                // inserts item parameters data into database
+
+
+            }
             public static void UpdateKanbanItemColumn(int itemid, string newcolumn)
             {
 
@@ -360,8 +391,6 @@ namespace Kanban
                 }
                 // updates column of specified kanbanitem 
             }
-
-
             public static ObservableCollection<KanbanItem> GetAllKanbanItems()
             {
                 ObservableCollection<KanbanItem> Kitems = new();
@@ -397,7 +426,6 @@ namespace Kanban
                 //Populates Kitems with every kanban item in table
                 return Kitems;
             }
-
             public static ObservableCollection<KanbanItem> GetAllColumnKanbanItems(string parcolumn)
             {
                 ObservableCollection<KanbanItem> Kitems = new();
@@ -434,7 +462,6 @@ namespace Kanban
                 //Populates Kitems with every kanban item that is in the parameter column
                 return Kitems;
             }
-
         }
     }
 }
