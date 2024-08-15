@@ -50,6 +50,8 @@ namespace Kanban
             InitializeComponent();
 
             SQLiteHelper.InitializeDatabase();
+
+            
             PopulateLists();
 
 
@@ -454,7 +456,10 @@ namespace Kanban
                                 string colour = reader.GetString(2); // Get the value of the third column
                                 string tag = reader.GetString(3); // Get the value of the fourth column
 
-                                Kitems.Add(new KanbanItem(id, title, colour, tag));
+                                KanbanItem current = new KanbanItem(id, title, colour, tag);
+                                FillSubTasksForKItem(current, id);
+
+                                Kitems.Add(current);
                               
                             }
                         }
@@ -468,8 +473,34 @@ namespace Kanban
                 //Populates Kitems with every kanban item that is in the parameter column
                 return Kitems;
             }
+            public static void FillSubTasksForKItem(KanbanItem item, int id)
+            {
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
 
-          
+                    string selectQuery = $"SELECT FlagState, Title FROM Ksubitems WHERE HostId = '{id}'";
+
+                    using (var command = new SqliteCommand(selectQuery, connection))
+                    {
+                        // Execute the query and obtain a reader to access the data
+                        using (var reader = command.ExecuteReader())
+                        {
+                            // Read and display the data
+                            while (reader.Read())
+                            {
+
+                                string flag = reader.GetString(0); // Get the value of the second column 
+                                string title = reader.GetString(1); // Get the value of the third column
+
+                                item.AddSubTask(flag, title);
+                            }
+                        }
+                    }
+
+
+                }
+            }
         }
     }
 }
