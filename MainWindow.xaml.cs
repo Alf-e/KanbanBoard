@@ -175,12 +175,12 @@ namespace Kanban
 
 
                 //this.Title = "Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item Test Item jfghdhem Test Itemvtsdysytsysssssssssssssssssssssssggggggggggggggggggggggggggg";
-                AddSubTask();
-                AddSubTask();
-                AddSubTask();
-                AddSubTask();
-                AddSubTask();
-                AddSubTask();
+                //AddSubTask();
+                //AddSubTask();
+                //AddSubTask();
+                //AddSubTask();
+                //AddSubTask();
+                //AddSubTask();
             }
             public KanbanItem(int id, string title, string color, string tag)
             {
@@ -192,10 +192,15 @@ namespace Kanban
 
             }
 
-            private void AddSubTask()
+            public void AddSubTask(string flagstate, string title)
             {
+                bool parsedflag = false;
+                if(flagstate == "true")
+                {
+                    parsedflag = true;
 
-                this.SubTasks.Add(new SubTask(this));
+                }
+                this.SubTasks.Add(new SubTask(title, parsedflag, this));
                 UpdateRunningTotalString();
             }
             public void UpdateRunningTotalString()
@@ -450,6 +455,7 @@ namespace Kanban
                                 string tag = reader.GetString(3); // Get the value of the fourth column
 
                                 Kitems.Add(new KanbanItem(id, title, colour, tag));
+                              
                             }
                         }
                     }
@@ -462,6 +468,8 @@ namespace Kanban
                 //Populates Kitems with every kanban item that is in the parameter column
                 return Kitems;
             }
+
+          
         }
     }
 }
