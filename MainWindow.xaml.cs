@@ -77,18 +77,7 @@ namespace Kanban
 
         }
 
-        private ObservableCollection<KanbanItem> FillListFromFile(string type)
-        {
-            ObservableCollection<KanbanItem> localList = new();
-
-            for (int i = 0; i < 2; i++)
-            {
-                localList.Add(new KanbanItem());
-            }
-            
-
-            return localList;
-        }
+       
 
         private void KanbanItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
