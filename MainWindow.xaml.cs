@@ -70,6 +70,11 @@ namespace Kanban
             
             
         }
+
+        private void ClickAddItem(object sender, RoutedEventArgs e)
+        {
+            //this.Close();
+        }
         
         private void PopulateLists()
         {
