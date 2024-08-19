@@ -74,6 +74,14 @@ namespace Kanban
         private void ClickAddItem(object sender, RoutedEventArgs e)
         {
             //this.Close();
+            AddItemWindow popup = new();
+
+            popup.Owner = this;
+            popup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            popup.ShowDialog();
+
+
         }
         
         private void PopulateLists()
@@ -83,8 +91,6 @@ namespace Kanban
             doneItems = SQLiteHelper.GetAllColumnKanbanItems("done");
 
         }
-
-       
 
         private void KanbanItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -198,7 +204,6 @@ namespace Kanban
                 this.SubTasks = new();
 
             }
-
             public void AddSubTask(string flagstate, string title)
             {
                 bool parsedflag = false;
@@ -226,7 +231,6 @@ namespace Kanban
                     this.SubTaskTotalString = $"{runningTotal}/{SubTasks.Count}";
                 });
             }
-
             protected virtual void OnPropertyChanged(string propertyName)
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -247,16 +251,13 @@ namespace Kanban
                         host.UpdateRunningTotalString();
                     }
                 }
-
                 public SubTask()
                 {
                 }
-
                 public SubTask(KanbanItem host) : this("Test Subtask", false, host)
                 {
 
                 }
-
                 public SubTask(string title, bool completed, KanbanItem host)
                 {
                     this.host = host;
