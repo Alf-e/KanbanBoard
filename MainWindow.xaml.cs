@@ -86,10 +86,25 @@ namespace Kanban
         
         private void PopulateLists()
         {
+            readyColumn.InternalItemsControl.ItemsSource = null;
+            doingColumn.InternalItemsControl.ItemsSource = null;
+            doneColumn.InternalItemsControl.ItemsSource = null;
+
             readyItems = SQLiteHelper.GetAllColumnKanbanItems("ready");
             doingItems = SQLiteHelper.GetAllColumnKanbanItems("doing");
             doneItems = SQLiteHelper.GetAllColumnKanbanItems("done");
 
+             readyColumn.InternalItemsControl.ItemsSource = readyItems;
+            readyColumn.KanbanListDrop += KanbanList_Drop;
+            readyColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
+
+            doingColumn.InternalItemsControl.ItemsSource = doingItems;
+            doingColumn.KanbanListDrop += KanbanList_Drop;
+            doingColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
+
+            doneColumn.InternalItemsControl.ItemsSource = doneItems;
+            doneColumn.KanbanListDrop += KanbanList_Drop;
+            doneColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
         }
 
         private void KanbanItem_MouseDown(object sender, MouseButtonEventArgs e)
