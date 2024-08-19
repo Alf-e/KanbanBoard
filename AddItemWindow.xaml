@@ -50,6 +50,7 @@
             </Label>
             <TextBox Grid.Row="5" x:Name="tagbox"/>
             <Button Grid.Row="6" Content="Add Item" Width="60" Height="30" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,0,0" Click="AddClick"/>
+            
         </Grid>
     </Grid>
 </Window>
