@@ -55,20 +55,6 @@ namespace Kanban
             PopulateLists();
 
 
-            readyColumn.InternalItemsControl.ItemsSource = readyItems;
-            readyColumn.KanbanListDrop += KanbanList_Drop;
-            readyColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
-
-            doingColumn.InternalItemsControl.ItemsSource = doingItems;
-            doingColumn.KanbanListDrop += KanbanList_Drop;
-            doingColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
-
-            doneColumn.InternalItemsControl.ItemsSource = doneItems;
-            doneColumn.KanbanListDrop += KanbanList_Drop;
-            doneColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
-
-            
-            
         }
 
         private void ClickAddItem(object sender, RoutedEventArgs e)
