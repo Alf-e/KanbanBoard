@@ -22,6 +22,16 @@ namespace Kanban
         public AddItemWindow()
         {
             InitializeComponent();
+            
         }
+
+        public void AddClick(object sender, RoutedEventArgs e)
+        {
+
+
+            MainWindow.SQLiteHelper.InsertKanbanItem(new MainWindow.KanbanItem(0,titlebox.Text,colourbox.Text,tagbox.Text));
+            this.Close();
+        }
+        
     }
 }
