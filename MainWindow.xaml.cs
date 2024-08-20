@@ -120,8 +120,8 @@ namespace Kanban
                     if (result == MessageBoxResult.Yes)
                     {
 
-                        // ADD ITEM REMOVAL IN DATABASE
-
+                       
+                        SQLiteHelper.DeleteKanbanItem(data);
                         sourceCollection.Remove(data);
 
                     }
