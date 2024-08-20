@@ -62,12 +62,13 @@ namespace Kanban
         private void ClickDeleteItem(object sender, RoutedEventArgs e)
         {
             DeleteToggle = true;
-
+            
         }
 
         private void ClickAddItem(object sender, RoutedEventArgs e)
         {
-            //this.Close();
+            DeleteToggle = false;
+            
             AddItemWindow popup = new();
 
             popup.Owner = this;
@@ -107,7 +108,8 @@ namespace Kanban
             var border = sender as Border;
             var data = border.DataContext as KanbanItem;
             var selectedHostControl = FindVisualParent<ItemsControl>(border);
-
+          
+           
             if (data != null)
             {   
                 this.sourceCollection = selectedHostControl.ItemsSource as ObservableCollection<KanbanItem>;
@@ -117,6 +119,9 @@ namespace Kanban
 
                     if (result == MessageBoxResult.Yes)
                     {
+
+                        // ADD ITEM REMOVAL IN DATABASE
+
                         sourceCollection.Remove(data);
 
                     }
@@ -369,6 +374,29 @@ namespace Kanban
                 // inserts item parameters data into database
 
                   
+            }
+            public static void DeleteKanbanItem(KanbanItem item)
+            {
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    string deleteItemQuery = "DELETE FROM Kitems WHERE Id = @id";
+
+
+                    using (var command = new SqliteCommand(deleteItemQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", item.Id);
+                       
+                        command.ExecuteNonQuery();
+                    }
+
+
+
+                    connection.Close();
+                }
+                // removes item from database with the parameter kitems id value
+
+
             }
             public static void InsertSubtaskItem(string hostid, string flagstate, string title)
             {
