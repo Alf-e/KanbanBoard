@@ -43,6 +43,7 @@ namespace Kanban
         public ObservableCollection<KanbanItem> sourceCollection;
         //Used to track the original collection of a dragdrop operation for removal
         
+        private bool DeleteToggle = false;
         
         public MainWindow()
         {
@@ -54,6 +55,13 @@ namespace Kanban
             
             PopulateLists();
 
+
+
+        }
+
+        private void ClickDeleteItem(object sender, RoutedEventArgs e)
+        {
+            DeleteToggle = true;
 
         }
 
@@ -101,12 +109,27 @@ namespace Kanban
             var selectedHostControl = FindVisualParent<ItemsControl>(border);
 
             if (data != null)
-            {
-                
-          
-                border.Opacity = 0.5;
+            {   
                 this.sourceCollection = selectedHostControl.ItemsSource as ObservableCollection<KanbanItem>;
+                if (DeleteToggle)
+                {
+                    MessageBoxResult result = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Exclamation);
+
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        sourceCollection.Remove(data);
+
+                    }
+                    DeleteToggle = false;
+                }
+                else
+                {
+                border.Opacity = 0.5;
+                
                 DragDrop.DoDragDrop(border, data, DragDropEffects.Move);
+                }
+          
+                
                 
                 
             }

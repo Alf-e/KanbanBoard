@@ -34,7 +34,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button Content="New Item" Grid.Column="1" FontWeight="Bold" Click="ClickAddItem"/>
-            <Button Content="Delete Item" Grid.Column="3" FontWeight="Bold" />
+            <Button Content="Delete Item" Grid.Column="3" FontWeight="Bold" Click="ClickDeleteItem"/>
         </Grid>
         
         <Grid Style="{StaticResource GridStyle1}" Grid.Row="2" >
