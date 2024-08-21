@@ -19,17 +19,19 @@ namespace Kanban
     /// </summary>
     public partial class AddItemWindow : Window
     {
+        public static MainWindow.KanbanItem? CreatedItem { get; set; }
         public AddItemWindow()
         {
             InitializeComponent();
-            
+            CreatedItem = null;
         }
 
         public void AddClick(object sender, RoutedEventArgs e)
         {
+            MainWindow.KanbanItem temp = new(0, titlebox.Text, colourbox.Text, tagbox.Text);
 
-
-            MainWindow.SQLiteHelper.InsertKanbanItem(new MainWindow.KanbanItem(0,titlebox.Text,colourbox.Text,tagbox.Text));
+            temp.Id = MainWindow.SQLiteHelper.InsertKanbanItem(temp);
+            CreatedItem = temp;
             this.Close();
         }
         

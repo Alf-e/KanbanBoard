@@ -74,6 +74,16 @@ namespace Kanban
             popup.Owner = this;
             popup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
 
+            popup.Closed += (sender, args) =>
+            {
+               if(AddItemWindow.CreatedItem != null)
+                {
+                    readyItems.Add(AddItemWindow.CreatedItem);
+                };
+                
+
+            };
+
             popup.ShowDialog();
 
 
@@ -188,7 +198,7 @@ namespace Kanban
 
         public class KanbanItem : INotifyPropertyChanged
         {
-            public int Id { get; set; }
+            public long Id { get; set; }
             public string Title { get; set; }
             public string Colour { get; set; }
             public string Tag { get; set; }
@@ -224,7 +234,7 @@ namespace Kanban
                 //AddSubTask();
                 //AddSubTask();
             }
-            public KanbanItem(int id, string title, string color, string tag)
+            public KanbanItem(long id, string title, string color, string tag)
             {
                 this.Id = id;
                 this.Title = title;
@@ -339,8 +349,9 @@ namespace Kanban
                 }
                    // creates database tables if doesnt exist
             }
-            public static void InsertKanbanItem(KanbanItem item)
+            public static long InsertKanbanItem(KanbanItem item)
             {
+                long lastInsertedId;
                 using (var connection = new SqliteConnection(connectionString))
                 {
                     connection.Open();
@@ -367,13 +378,18 @@ namespace Kanban
                         command.ExecuteNonQuery();
                     }
 
-
+                    string lastInsertRowIdQuery = "SELECT last_insert_rowid();";
+                    using (var command = new SqliteCommand(lastInsertRowIdQuery, connection))
+                    {
+                        lastInsertedId = (long)command.ExecuteScalar();
+                        
+                    }
 
                     connection.Close();
                 }
                 // inserts item parameters data into database
 
-                  
+                  return lastInsertedId;
             }
             public static void DeleteKanbanItem(KanbanItem item)
             {
@@ -431,7 +447,7 @@ namespace Kanban
 
 
             }
-            public static void UpdateKanbanItemColumn(int itemid, string newcolumn)
+            public static void UpdateKanbanItemColumn(long itemid, string newcolumn)
             {
 
                 using (var connection = new SqliteConnection(connectionString))
@@ -531,7 +547,7 @@ namespace Kanban
                 //Populates Kitems with every kanban item that is in the parameter column
                 return Kitems;
             }
-            public static void FillSubTasksForKItem(KanbanItem item, int id)
+            public static void FillSubTasksForKItem(KanbanItem item, long id)
             {
                 using (var connection = new SqliteConnection(connectionString))
                 {
