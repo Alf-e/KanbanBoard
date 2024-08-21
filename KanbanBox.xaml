@@ -21,7 +21,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-
+                                <ColumnDefinition Width="15"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
@@ -30,6 +30,9 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="{Binding Title}" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="2"  TextWrapping="Wrap"/>
+                            <Button Grid.Column="2"  FontWeight="Bold" Height="15" Width="15">
+                                <Image Source="Star.png" Width="10" Height="10"/>
+                            </Button>
 
                             <ToggleButton x:Name="subTasksToggleButton" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="auto" Height="25" Padding="5,1" >
                                 <StackPanel Orientation="Horizontal">
@@ -37,7 +40,7 @@
                                     <TextBlock Text="{Binding SubTaskTotalString}"/>
                                 </StackPanel>
                             </ToggleButton>
-                            <TextBlock Text="{Binding Tag}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Tag}"  Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" VerticalAlignment="Center" HorizontalAlignment="Right" />
 
                             <ItemsControl ItemsSource="{Binding SubTasks}" Grid.ColumnSpan="2" Grid.Row="2">
                                 <ItemsControl.Visibility>
