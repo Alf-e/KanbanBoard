@@ -44,7 +44,6 @@ namespace Kanban
         //Used to track the original collection of a dragdrop operation for removal
         
         private bool DeleteToggle = false;
-        
         public MainWindow()
         {
             
@@ -58,13 +57,11 @@ namespace Kanban
 
 
         }
-
         private void ClickDeleteItem(object sender, RoutedEventArgs e)
         {
             DeleteToggle = true;
             
         }
-
         private void ClickAddItem(object sender, RoutedEventArgs e)
         {
             DeleteToggle = false;
@@ -88,7 +85,6 @@ namespace Kanban
 
 
         }
-        
         private void PopulateLists()
         {
             readyColumn.InternalItemsControl.ItemsSource = null;
@@ -111,7 +107,6 @@ namespace Kanban
             doneColumn.KanbanListDrop += KanbanList_Drop;
             doneColumn.KanbanItemMouseDown += KanbanItem_MouseDown;
         }
-
         private void KanbanItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
             
@@ -149,7 +144,6 @@ namespace Kanban
                 
             }
         }
-
         private void KanbanList_Drop(object sender, DragEventArgs e)
         {
             
@@ -180,7 +174,6 @@ namespace Kanban
             }
             
         }
-
         private T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
         {
             DependencyObject parentObject = VisualTreeHelper.GetParent(child);
@@ -193,9 +186,6 @@ namespace Kanban
             else
                 return FindVisualParent<T>(parentObject);
         }
-
-       
-
         public class KanbanItem : INotifyPropertyChanged
         {
             public long Id { get; set; }
