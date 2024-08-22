@@ -398,7 +398,7 @@ namespace Kanban
 
                     using (var command = new SqliteCommand(deleteSubItemQuery, connection))
                     {
-                        command.Parameters.AddWithValue("@id", item.Id);
+                        command.Parameters.AddWithValue("@id", item.Id.ToString());
 
                         command.ExecuteNonQuery();
                     }
