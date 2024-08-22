@@ -28,9 +28,9 @@ namespace Kanban
         public void AddClick(object sender, RoutedEventArgs e)
         {
             MainWindow.KanbanItem temp  = SourceBtn.DataContext as MainWindow.KanbanItem;
-
-            MainWindow.SQLiteHelper.InsertSubtaskItem(temp.Id.ToString(), "false", titlebox.Text);
-            temp.AddSubTask("false", titlebox.Text);
+            long tempId = MainWindow.SQLiteHelper.InsertSubtaskItem(temp.Id.ToString(), "false", titlebox.Text);
+            
+            temp.AddSubTask("false", titlebox.Text, tempId);
             this.Close();
         }
     }

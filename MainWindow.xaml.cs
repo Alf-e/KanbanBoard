@@ -233,7 +233,7 @@ namespace Kanban
                 this.SubTasks = new();
 
             }
-            public void AddSubTask(string flagstate, string title)
+            public void AddSubTask(string flagstate, string title, long id)
             {
                 bool parsedflag = false;
                 if(flagstate == "true")
@@ -241,7 +241,7 @@ namespace Kanban
                     parsedflag = true;
 
                 }
-                this.SubTasks.Add(new SubTask(title, parsedflag, this));
+                this.SubTasks.Add(new SubTask(id,title, parsedflag, this));
                 UpdateRunningTotalString();
             }
             public void UpdateRunningTotalString()
@@ -268,9 +268,13 @@ namespace Kanban
 
             public class SubTask
             {
+                public long Id { get; set; }
                 public string Title { get; set; }
                 private bool completed;
                 private KanbanItem host;
+
+                private bool initialised = false;
+
                 public bool Completed
                 {
                     get { return this.completed; }
@@ -278,21 +282,27 @@ namespace Kanban
                     {
                         this.completed = value;
                         host.UpdateRunningTotalString();
+                        if (initialised)
+                        {
+                    string sqlvalue = "false";
+                        if (completed)
+                        {
+                            sqlvalue = "true";
+                        }
+                        SQLiteHelper.UpdateSubtaskFlagstate(this.Id, sqlvalue);
+                        }
+                       
                     }
                 }
-                public SubTask()
-                {
-                }
-                public SubTask(KanbanItem host) : this("Test Subtask", false, host)
-                {
-
-                }
-                public SubTask(string title, bool completed, KanbanItem host)
+            
+               
+                public SubTask(long id ,string title, bool completed, KanbanItem host)
                 {
                     this.host = host;
                     Title = title;
                     Completed = completed;
-
+                    this.Id = id;
+                    initialised = true;
                 }
             }
         }
@@ -475,6 +485,31 @@ namespace Kanban
                 }
                 // updates column of specified kanbanitem 
             }
+            public static void UpdateSubtaskFlagstate(long itemid, string flagstate)
+            {
+                
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    string updateColumnQuery = @"
+    UPDATE Ksubitems
+    SET FlagState = @flagstate
+    WHERE Id = @id";
+
+
+                    using (var command = new SqliteCommand(updateColumnQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", itemid);
+                        command.Parameters.AddWithValue("@flagstate", flagstate);
+                        command.ExecuteNonQuery();
+                    }
+
+
+
+                    connection.Close();
+                }
+                // updates flagstate of subtask based on id parameter
+            }
             public static ObservableCollection<KanbanItem> GetAllKanbanItems()
             {
                 ObservableCollection<KanbanItem> Kitems = new();
@@ -534,7 +569,7 @@ namespace Kanban
                                 string tag = reader.GetString(3); // Get the value of the fourth column
 
                                 KanbanItem current = new KanbanItem(id, title, colour, tag);
-                                FillSubTasksForKItem(current, id);
+                                FillSubTasksForKItem(current, id.ToString());
 
                                 Kitems.Add(current);
                               
@@ -550,13 +585,13 @@ namespace Kanban
                 //Populates Kitems with every kanban item that is in the parameter column
                 return Kitems;
             }
-            public static void FillSubTasksForKItem(KanbanItem item, long id)
+            public static void FillSubTasksForKItem(KanbanItem item, string id)
             {
                 using (var connection = new SqliteConnection(connectionString))
                 {
                     connection.Open();
 
-                    string selectQuery = $"SELECT FlagState, Title FROM Ksubitems WHERE HostId = '{id}'";
+                    string selectQuery = $"SELECT Id, FlagState, Title FROM Ksubitems WHERE HostId = '{id}'";
 
                     using (var command = new SqliteCommand(selectQuery, connection))
                     {
@@ -566,15 +601,15 @@ namespace Kanban
                             // Read and display the data
                             while (reader.Read())
                             {
+                                long newid = reader.GetInt64(0);
+                                string flag = reader.GetString(1); // Get the value of the second column 
+                                string title = reader.GetString(2); // Get the value of the third column
 
-                                string flag = reader.GetString(0); // Get the value of the second column 
-                                string title = reader.GetString(1); // Get the value of the third column
-
-                                item.AddSubTask(flag, title);
+                                item.AddSubTask(flag, title, newid);
                             }
                         }
                     }
-
+                    connection.Close();
 
                 }
             }
