@@ -19,9 +19,19 @@ namespace Kanban
     /// </summary>
     public partial class ManageSubtaskWindow : Window
     {
-        public ManageSubtaskWindow()
+        public Button SourceBtn;
+        public ManageSubtaskWindow(Button sender)
         {
             InitializeComponent();
+            SourceBtn = sender;
+        }
+        public void AddClick(object sender, RoutedEventArgs e)
+        {
+            MainWindow.KanbanItem temp  = SourceBtn.DataContext as MainWindow.KanbanItem;
+
+            MainWindow.SQLiteHelper.InsertSubtaskItem(temp.Id.ToString(), "false", titlebox.Text);
+            temp.AddSubTask("false", titlebox.Text);
+            this.Close();
         }
     }
 }
