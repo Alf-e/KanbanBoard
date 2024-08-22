@@ -397,7 +397,7 @@ namespace Kanban
                 {
                     connection.Open();
                     string deleteItemQuery = "DELETE FROM Kitems WHERE Id = @id";
-
+                    string deleteSubItemQuery = "DELETE FROM Ksubitems WHERE HostId = @id";
 
                     using (var command = new SqliteCommand(deleteItemQuery, connection))
                     {
@@ -406,12 +406,19 @@ namespace Kanban
                         command.ExecuteNonQuery();
                     }
 
+                    using (var command = new SqliteCommand(deleteSubItemQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", item.Id);
+
+                        command.ExecuteNonQuery();
+                    }
+
 
 
                     connection.Close();
                 }
                 // removes item from database with the parameter kitems id value
-
+                // removes all subitems from database where the parameter id matches host id
 
             }
             public static void InsertSubtaskItem(string hostid, string flagstate, string title)
