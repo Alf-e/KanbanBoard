@@ -411,8 +411,9 @@ namespace Kanban
                 // removes all subitems from database where the parameter id matches host id
 
             }
-            public static void InsertSubtaskItem(string hostid, string flagstate, string title)
+            public static long InsertSubtaskItem(string hostid, string flagstate, string title)
             {
+                long lastInsertedId;
                 using (var connection = new SqliteConnection(connectionString))
                 {
                     connection.Open();
@@ -436,13 +437,18 @@ namespace Kanban
                         command.ExecuteNonQuery();
                     }
 
+                    string lastInsertRowIdQuery = "SELECT last_insert_rowid();";
+                    using (var command = new SqliteCommand(lastInsertRowIdQuery, connection))
+                    {
+                        lastInsertedId = (long)command.ExecuteScalar();
 
+                    }
 
                     connection.Close();
                 }
                 // inserts item parameters data into database
 
-
+                return lastInsertedId;
             }
             public static void UpdateKanbanItemColumn(long itemid, string newcolumn)
             {
