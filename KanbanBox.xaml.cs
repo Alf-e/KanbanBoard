@@ -45,5 +45,23 @@ namespace Kanban
              
         }
 
+        public void SubtaskBtnClick(object sender, RoutedEventArgs e)
+        {
+            Button test = sender as Button;
+            ManageSubtaskWindow popup = new(test);
+
+            
+            popup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+
+            popup.Closed += (sender, args) =>
+            {
+               
+
+
+            };
+            
+            popup.ShowDialog();
+        }
+
     }
 }

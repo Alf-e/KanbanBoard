@@ -30,7 +30,7 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="{Binding Title}" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="2"  TextWrapping="Wrap"/>
-                            <Button Grid.Column="2"  FontWeight="Bold" Height="15" Width="15">
+                            <Button Grid.Column="2"  FontWeight="Bold" Height="15" Width="15" Click="SubtaskBtnClick">
                                 <Image Source="Star.png" Width="10" Height="10"/>
                             </Button>
 
