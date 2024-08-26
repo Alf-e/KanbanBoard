@@ -23,10 +23,25 @@
             <Grid.ColumnDefinitions>
 
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+
+            </Grid.RowDefinitions>
+
+            <Button Grid.Column="0" Grid.Row="0" Content="Add Subtask" IsEnabled="False" Click="AddTabButton" x:Name="AddTabBtn"/>
+            <Button Grid.Column="1" Grid.Row="0" Content="Delete Subtask" Click="DeleteTabButton" x:Name="DeleteTabBtn"/>
+
+            <Grid Grid.Row="1" Grid.ColumnSpan="2" x:Name="AddGrid"  >
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="*"/>
 
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
 
               
@@ -41,5 +56,29 @@
             <Button Grid.Row="2" Content="Add Subtask" Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,0,0" Click="AddClick"/>
 
         </Grid>
+            <Grid Grid.Row="1" Grid.ColumnSpan="2" x:Name="DeleteGrid" Visibility="Collapsed">
+                <Grid.ColumnDefinitions>
+
+                    <ColumnDefinition Width="*"/>
+
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
+
+
+                    <RowDefinition Height="50"/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                    Select subtask to delete
+                </Label>
+                <ComboBox Grid.Row="1" x:Name="selectbox"/>
+
+                <Button Grid.Row="2" Content="Delete Subtask" Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,0,0" />
+            </Grid>
+            
+        </Grid>
+       
     </Grid>
 </Window>

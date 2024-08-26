@@ -33,5 +33,19 @@ namespace Kanban
             temp.AddSubTask("false", titlebox.Text, tempId);
             this.Close();
         }
+        public void AddTabButton(object sender, RoutedEventArgs e)
+        {
+            DeleteGrid.Visibility = Visibility.Collapsed;
+            AddGrid.Visibility = Visibility.Visible;
+            AddTabBtn.IsEnabled = false;
+            DeleteTabBtn.IsEnabled = true;
+        }
+        public void DeleteTabButton(object sender, RoutedEventArgs e)
+        {
+            AddGrid.Visibility = Visibility.Collapsed;
+            DeleteGrid.Visibility = Visibility.Visible;
+            DeleteTabBtn.IsEnabled = false;
+            AddTabBtn.IsEnabled = true;
+        }
     }
 }
