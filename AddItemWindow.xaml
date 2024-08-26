@@ -41,10 +41,11 @@
                 Title
             </Label>
             <TextBox Grid.Row="1" x:Name="titlebox"/>
-            <Label Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+            <Label Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Left" >
                 Colour
             </Label>
-            <TextBox Grid.Row="3" x:Name="colourbox"/>
+            
+            <ComboBox Grid.Row="3" x:Name="colourbox" />
             <Label Grid.Row="4" VerticalAlignment="Bottom" HorizontalAlignment="Left">
                 Tag
             </Label>
