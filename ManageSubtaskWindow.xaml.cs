@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,11 +21,26 @@ namespace Kanban
     public partial class ManageSubtaskWindow : Window
     {
         public Button SourceBtn;
+       
         public ManageSubtaskWindow(Button sender)
         {
             InitializeComponent();
             SourceBtn = sender;
+            MainWindow.KanbanItem temp = SourceBtn.DataContext as MainWindow.KanbanItem;
+            if (temp.SubTasks.Count < 1)
+            {
+                DelSubtaskBtn.IsEnabled = false;
+            }
+            else
+            {
+              
+                selectbox.ItemsSource = temp.SubTasks;
+                selectbox.DisplayMemberPath = "Title";
+                selectbox.SelectedIndex = 0;
+            }
+            
         }
+       
         public void AddClick(object sender, RoutedEventArgs e)
         {
             MainWindow.KanbanItem temp  = SourceBtn.DataContext as MainWindow.KanbanItem;
@@ -46,6 +62,13 @@ namespace Kanban
             DeleteGrid.Visibility = Visibility.Visible;
             DeleteTabBtn.IsEnabled = false;
             AddTabBtn.IsEnabled = true;
+        }
+
+        public void DeleteClick(object sender, RoutedEventArgs e)
+        {
+            MainWindow.KanbanItem temp = selectbox.SelectedItem as MainWindow.KanbanItem;
+
+
         }
     }
 }
