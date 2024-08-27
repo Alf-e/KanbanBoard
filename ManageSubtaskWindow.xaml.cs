@@ -26,14 +26,23 @@ namespace Kanban
         {
             InitializeComponent();
             SourceBtn = sender;
+         
+          ValidateSubtaskList();
+            
+            
+          
+            
+        }
+        private void ValidateSubtaskList()
+        {
             MainWindow.KanbanItem temp = SourceBtn.DataContext as MainWindow.KanbanItem;
             if (temp.SubTasks.Count < 1)
             {
                 DelSubtaskBtn.IsEnabled = false;
+
             }
             else
             {
-              
                 selectbox.ItemsSource = temp.SubTasks;
                 selectbox.DisplayMemberPath = "Title";
                 selectbox.SelectedIndex = 0;
@@ -66,9 +75,14 @@ namespace Kanban
 
         public void DeleteClick(object sender, RoutedEventArgs e)
         {
-            MainWindow.KanbanItem temp = selectbox.SelectedItem as MainWindow.KanbanItem;
+            MainWindow.KanbanItem.SubTask temp = selectbox.SelectedItem as MainWindow.KanbanItem.SubTask;
+            MainWindow.SQLiteHelper.DeleteSubtaskItem(temp.Id);
 
+            MainWindow.KanbanItem temp2 = SourceBtn.DataContext as MainWindow.KanbanItem;
+            temp2.DeleteSubtask(temp);
+            temp2.UpdateRunningTotalString();
 
+            ValidateSubtaskList();
         }
     }
 }

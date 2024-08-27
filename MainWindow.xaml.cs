@@ -192,7 +192,7 @@ namespace Kanban
             public string Title { get; set; }
             public string Colour { get; set; }
             public string Tag { get; set; }
-            public List<SubTask> SubTasks { get; set; }
+            public ObservableCollection<SubTask> SubTasks { get; set; }
 
             private string subTaskTotalString;
             public string SubTaskTotalString
@@ -244,6 +244,11 @@ namespace Kanban
                 this.SubTasks.Add(new SubTask(id,title, parsedflag, this));
                 UpdateRunningTotalString();
             }
+            public void DeleteSubtask(SubTask item)
+            {
+                SubTasks.Remove(item);
+            }
+
             public void UpdateRunningTotalString()
             {
                 int runningTotal = 0;
