@@ -460,6 +460,31 @@ namespace Kanban
 
                 return lastInsertedId;
             }
+
+            public static void DeleteSubtaskItem(long id)
+            {
+                using (var connection = new SqliteConnection(connectionString))
+                {
+                    connection.Open();
+                    
+                    string deleteSubItemQuery = "DELETE FROM Ksubitems WHERE Id = @id";
+
+          
+                    using (var command = new SqliteCommand(deleteSubItemQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+
+                        command.ExecuteNonQuery();
+                    }
+
+
+
+                    connection.Close();
+                }
+                // removes item from subtask database with the parameter id value
+                
+
+            }
             public static void UpdateKanbanItemColumn(long itemid, string newcolumn)
             {
 
