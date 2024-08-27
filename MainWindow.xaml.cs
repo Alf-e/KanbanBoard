@@ -194,7 +194,7 @@ namespace Kanban
             public string Tag { get; set; }
             public ObservableCollection<SubTask> SubTasks { get; set; }
 
-            private string subTaskTotalString;
+            private string subTaskTotalString = "0/0";
             public string SubTaskTotalString
             {
                 get { return subTaskTotalString; }
