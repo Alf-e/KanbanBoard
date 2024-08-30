@@ -4,6 +4,15 @@
              xmlns:local="clr-namespace:Kanban"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <!-- Theme setting -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        
         <Style x:Key="GridStyle1" TargetType="{x:Type Grid}" >
             <!--<Setter Property="Grid.Background" Value="Red"/>-->
             <!--<Setter Property="Grid.ShowGridLines" Value="True"/>-->
@@ -36,9 +45,9 @@
             <Setter Property="Margin" Value="5"/>
             
         </Style>
-        
 
 
+        </ResourceDictionary>
 
     </Application.Resources>
 </Application>

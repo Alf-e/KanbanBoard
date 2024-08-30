@@ -27,6 +27,7 @@ using System.Windows.Threading;
 using Timer = System.Timers.Timer;
 using SQLitePCL;
 using Microsoft.Data.Sqlite;
+using MahApps.Metro.Controls;
 
 
 namespace Kanban
@@ -34,7 +35,7 @@ namespace Kanban
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         public ObservableCollection<KanbanItem> readyItems;
         public ObservableCollection<KanbanItem> doingItems;
