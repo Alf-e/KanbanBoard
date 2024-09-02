@@ -73,7 +73,7 @@
                 <Label Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">
                     Select subtask to delete
                 </Label>
-                <ComboBox Grid.Row="1" x:Name="selectbox"/>
+                <ComboBox Grid.Row="1" Height="75" x:Name="selectbox" VerticalAlignment="Top"/>
 
                 <Button Grid.Row="2" Content="Delete Subtask" Width="100" Height="30" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,10,0,0" x:Name="DelSubtaskBtn" Click="DeleteClick"/>
             </Grid>
